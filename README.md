@@ -1,4 +1,4 @@
-# demoPDEOPT
+# Demonstration code: PDEOPT
 Optimal control with L1-regularization, state and control box-constraints
 This is a demonstration code for solving optimal control problems as described in the article "PDE-Constrained Optimization: Optimal control with L1-regularization, state and control box-constraints"
 
