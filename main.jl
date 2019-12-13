@@ -320,14 +320,14 @@ function Reducednewton(xnew::Array{Float64,1},n::Int64,alpha::Float64,beta::Func
 			flag=false
 			return xnew::Array{Float64,1}
 		end
-		if( x2norm < -tol)
+		if( x2norm < -tol) # Currently inactive, remove - to activiate
 			println("Solution convergence in ", itt, " iterations.")
 			println("Average linear iterations = ", totaliter/itt )
 			println("Total linear iterations = ", totaliter )
 			flag=false
 			return xnew::Array{Float64,1}
 		end
-		if( maxpointchange < -h^2)
+		if( maxpointchange < -h^2) # Currently inactive, remove - to activiate
 			println("Max point movement convergence in ", itt, " iterations.")
 			println("Average linear iterations = ", totaliter/itt )
 			println("Total linear iterations = ", totaliter )
@@ -354,11 +354,11 @@ end
 ##############################
 # Initial coarse grid
 n = 32 
-alpha= 1e-6 #L2-regulization 
+alpha= 1e-7 #L2-regulization 
 c =  1. /alpha # value assigned to both c_1 and c_2 (in article notation)
 epsilon = alpha^(1/4) # Moreau-Yosida reg.
 lintol = 1e-6 # Tolerance for linear solver (GCR)
-CGtol = 1e-5 # Tolerance for the block solvers in the preconditioner (CG)
+CGtol = 1e-6 # Tolerance for the block solvers in the preconditioner (CG)
 
 function beta(x::Float64,y::Float64)
 	# L1 regularization (can be a function)
@@ -376,17 +376,9 @@ function desiredstate(x::Float64,y::Float64)
 	# Defines the desired state, here x and y denotes spacial coordinates. 
 	# Note: Boundary conditions will also be set by the desired state. 
 	# ------
-	#return abs(sin(x*y*1*pi))*abs(cos(x*y*1*pi))*cos(x)
-	#return sin(5*x) + cos(4*y) 
 	return sin(2*pi*x)*sin(2*pi*y)*exp(2*x)/6. # PROBLEM 1
-	#return sin(2*pi*x*y) 
-	#return sin(2*pi*x)*sin(2*pi*y) 
-	#return sin(3*pi*x-cos(3*pi*y)) 
-	#return sin(3*pi*x-cos(3*pi*y))*exp(2*x) 
-	#return sin(2*pi*x*sin(y*pi*cos(x)))
 	#return -exp( abs(x-0.5)+abs(y-0.5) ) # PROBLEM 2
-	#return -exp( (x-0.5)^2+(y-0.5)^2 )  
-	#return abs(sin(2*pi*x)*sin(2*pi*y)) # Problem 3
+	#return abs(sin(2*pi*x)*sin(2*pi*y)) # PROBLEM 3
 end
 ##############################
 #          SOLVING           #
