@@ -2,7 +2,7 @@
 # Given as is without any gurantees.
 using LinearAlgebra, SparseArrays, IterativeSolvers #Should be in Julia
 using AlgebraicMultigrid, JLD2, FileIO # Needed to run the code
-#using Makie
+using Makie
 # Load auxilliary functions
 include("aux.jl")
 #####################################
@@ -261,7 +261,7 @@ function Reducednewton(xnew::Array{Float64,1},n::Int64,alpha::Float64,beta::Func
 	flag::Bool = true
 	itt::Int64 = 1
 	maxit::Int64 = 40
-	tol::Float64 = -1e-6 # 2-norm change of soltuion convergence, currently inactive
+	tol::Float64 = 1e-6 # 2-norm change of soltuion convergence, currently inactive
 	tolpoints::Float64 = 1 # Number of points changing sets, currently active
 	errornew::Float64 = 1e6 # Initialize by something ridiclous
 	xnewred::Array{Float64,1} = xnew[1:Int64(2*n_block)]
@@ -291,7 +291,7 @@ function Reducednewton(xnew::Array{Float64,1},n::Int64,alpha::Float64,beta::Func
 		if(itt == 1)
 			xnewred, currentiter = GCR(zeros(2*n_block),system, rhs,P,lintol,50,"    GCR: ") # zero initial guess in first step
 		else
-			xnewred, currentiter = GCR(zeros(2*n_block),system, rhs,P,lintol,50,"    GCR: ") # Previous sol as initial guess in later steps
+			xnewred, currentiter = GCR(xnewoldred,system, rhs,P,lintol,50,"    GCR: ") # Previous sol as initial guess in later steps
 		end
 		totaliter = totaliter + currentiter # Linear iteration counter
 		xnewoldred = xnewred
@@ -354,7 +354,7 @@ end
 ##############################
 # Initial coarse grid
 n = 32 
-alpha= 1e-7 #L2-regulization 
+alpha= 1e-6 #L2-regulization 
 c =  1. /alpha # value assigned to both c_1 and c_2 (in article notation)
 epsilon = alpha^(1/4) # Moreau-Yosida reg.
 lintol = 1e-6 # Tolerance for linear solver (GCR)
@@ -366,27 +366,26 @@ function beta(x::Float64,y::Float64)
 	return 1e-4
 end
 
-a(x::Float64,y::Float64) = -3000000000000000000 #lower limit control function
+a(x::Float64,y::Float64) = -30 #lower limit control function
 b(x::Float64,y::Float64) = 30  #upper limit control function
 
-ymin(x::Float64,y::Float64) = -100000000000000000.2 # lower limit state
-ymax(x::Float64,y::Float64) = -1.3 # upper limit state 
+ymin(x::Float64,y::Float64) = -0.2 # lower limit state
+ymax(x::Float64,y::Float64) = 0.3 # upper limit state 
 
 function desiredstate(x::Float64,y::Float64)
 	# Defines the desired state, here x and y denotes spacial coordinates. 
 	# Note: Boundary conditions will also be set by the desired state. 
 	# ------
 	#return abs(sin(x*y*1*pi))*abs(cos(x*y*1*pi))*cos(x)
-	#return sin(5*x) + cos(4*y) # Hintermuller example 2
-	#return sin(2*pi*x)*sin(2*pi*y)*exp(2*x)/6. # From Porcelli -------------- EXAMPLE 1
-	#return sin(2*pi*x*y) # Example 1 from Maya's paper
-	#return sin(2*pi*x)*sin(2*pi*y) # Modified Porcelli
-	#return sin(3*pi*x-cos(3*pi*y)) # Example 2 from Maya's paper
-	#return sin(3*pi*x-cos(3*pi*y))*exp(2*x) # Example 2 from Maya's paper modified
+	#return sin(5*x) + cos(4*y) 
+	return sin(2*pi*x)*sin(2*pi*y)*exp(2*x)/6. # PROBLEM 1
+	#return sin(2*pi*x*y) 
+	#return sin(2*pi*x)*sin(2*pi*y) 
+	#return sin(3*pi*x-cos(3*pi*y)) 
+	#return sin(3*pi*x-cos(3*pi*y))*exp(2*x) 
 	#return sin(2*pi*x*sin(y*pi*cos(x)))
-	return -exp( abs(x-0.5)+abs(y-0.5) ) # Very cool function tbh
-	#return -exp( (x-0.5)^2+(y-0.5)^2 ) # Very cool function tbh v2 -------------- EXAMPLE 2
-	#return 0.
+	#return -exp( abs(x-0.5)+abs(y-0.5) ) # PROBLEM 2
+	#return -exp( (x-0.5)^2+(y-0.5)^2 )  
 	#return abs(sin(2*pi*x)*sin(2*pi*y)) # Problem 3
 end
 ##############################
@@ -441,9 +440,9 @@ println("Time to solve on the fine grid: ", round(elapsed,digits=2), " seconds."
 # Comment: This can be quite sluggish but at least it visualizes the result.
 
 # Uncomment to plot with Makie:-----------------------
-#include("Makie_Plot.jl")
-#state,control=plot_solution(n, sol,desiredstate,alpha)
-#update_cam!(control, FRect(Vec3f0(0),Vec3f0(1)) )
+include("Makie_Plot.jl")
+state,control=plot_solution(n, sol,desiredstate,alpha)
+update_cam!(control, FRect(Vec3f0(0),Vec3f0(1)) )
 
 # Comment: Control which plot to view using display(state), display(control)
 #	   update camera with update_cam!(control, FRect(Vec3f0(0),Vec3f0(1)) )
