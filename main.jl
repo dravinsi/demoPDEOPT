@@ -1,8 +1,8 @@
 # Demo-code for PDE-OPT optimal control written by Ivo Dravins
 # Given as is without any gurantees.
-using LinearAlgebra, SparseArrays, IterativeSolvers #Should be in Julia
-using AlgebraicMultigrid, JLD2, FileIO # Needed to run the code
-using Makie
+using LinearAlgebra, SparseArrays, IterativeSolvers 
+using AlgebraicMultigrid, JLD2, FileIO 
+#using Makie
 # Load auxilliary functions
 include("aux.jl")
 #####################################
@@ -432,9 +432,9 @@ println("Time to solve on the fine grid: ", round(elapsed,digits=2), " seconds."
 # Comment: This can be quite sluggish but at least it visualizes the result.
 
 # Uncomment to plot with Makie:-----------------------
-include("Makie_Plot.jl")
-state,control=plot_solution(n, sol,desiredstate,alpha)
-update_cam!(control, FRect(Vec3f0(0),Vec3f0(1)) )
+#include("Makie_Plot.jl")
+#state,control=plot_solution(n, sol,desiredstate,alpha)
+#update_cam!(control, FRect(Vec3f0(0),Vec3f0(1)) )
 
 # Comment: Control which plot to view using display(state), display(control)
 #	   update camera with update_cam!(control, FRect(Vec3f0(0),Vec3f0(1)) )
