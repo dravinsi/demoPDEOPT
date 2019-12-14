@@ -401,14 +401,14 @@ n = n*2
 sol = Reducednewton(x0,n,alpha,beta,a,b,ymin,ymax,c,epsilon,desiredstate,lintol,CGtol)
 
 # Interpolate solution and solve again
-x0 = interpolate_mesh(sol,n,n*2)
-n = n*2
-sol = Reducednewton(x0,n,alpha,beta,a,b,ymin,ymax,c,epsilon,desiredstate,lintol,CGtol)
+#x0 = interpolate_mesh(sol,n,n*2)
+#n = n*2
+#sol = Reducednewton(x0,n,alpha,beta,a,b,ymin,ymax,c,epsilon,desiredstate,lintol,CGtol)
 
 # Interpolate solution and solve again
-x0 = interpolate_mesh(sol,n,n*2)
-n = n*2
-sol = Reducednewton(x0,n,alpha,beta,a,b,ymin,ymax,c,epsilon,desiredstate,lintol,CGtol)
+#x0 = interpolate_mesh(sol,n,n*2)
+#n = n*2
+#sol = Reducednewton(x0,n,alpha,beta,a,b,ymin,ymax,c,epsilon,desiredstate,lintol,CGtol)
 
 
 
