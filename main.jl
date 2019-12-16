@@ -354,7 +354,7 @@ end
 ##############################
 # Initial coarse grid
 n = 32 
-alpha= 1e-7 #L2-regulization 
+alpha= 1e-6 #L2-regulization 
 c =  1. /alpha # value assigned to both c_1 and c_2 (in article notation)
 epsilon = alpha^(1/4) # Moreau-Yosida reg.
 lintol = 1e-6 # Tolerance for linear solver (GCR)
